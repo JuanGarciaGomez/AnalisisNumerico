@@ -34,8 +34,46 @@ class MainActivity : AppCompatActivity() {
 
     private fun solve() {
         btnSolve.setOnClickListener {
-
+            //funcionSeparada(funcion.text.split("="))
         }
+    }
+
+    fun funcionSeparada(split: List<String>, x: Double): Double {
+        var funcion = split[2]
+        return 0.0
+    }
+/*    fun funcion(x: Double): Double {
+        return (x * x * x) + 2 * (x * x) + (10 * x) - 20
+
+    }
+
+    fun funcalcRaiz():Double {
+        var i = 1
+        while(e>0.001)
+        {
+            x[i+1]=x[i]-( (funcion(x[i])*(x[i-1]-x[i]))/(funcion(x[i-1])-funcion(x[i])) );
+
+            e= kotlin.math.abs((x[i + 1] - x[i]) / (x[i + 1])) *100;
+            i++
+        }
+        return x[i];
+    }*/
+
+    fun respuesta(): String {
+        var i = 2
+        var x0 = 0.0
+        var x1 = 1.0
+        var rta: Double
+        var rtaAnterior = 0.0
+        do {
+            rta = x1 - ((x1-x0)*funcionSeparada(funcion.text.split("="),x1))/(funcionSeparada(funcion.text.split("="),x1)-funcionSeparada(funcion.text.split("="),x0))
+            x0 = x1
+            x1 = rta
+            rtaAnterior = x0
+            i++
+        } while(rta != rtaAnterior)
+
+        return "i$rta"
     }
 
     @SuppressLint("SetTextI18n")
