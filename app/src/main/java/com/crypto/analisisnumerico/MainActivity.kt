@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnAdd: Button
     private lateinit var btnSolve: Button
     private lateinit var funcion: TextView
+    private lateinit var rta: TextView
     private lateinit var variable: EditText
     private lateinit var coeficiente: EditText
     private lateinit var exponente: EditText
@@ -34,46 +35,51 @@ class MainActivity : AppCompatActivity() {
 
     private fun solve() {
         btnSolve.setOnClickListener {
-            //funcionSeparada(funcion.text.split("="))
+            rta.text= respuesta()
         }
     }
+    /*
+     var funcion = "3X^1+5X^2"
+        var funcionRemplazada = funcion.replace("X", "1")
+        println(funcionRemplazada)
+        var x = funcionRemplazada.split("+")
+        println(x)
+        var y = x[1].split("^")
+        println(y)
+        var z = Math.pow(y[0].substring(1,2).toDouble(),y[1].toDouble())
+        println(z)
+     */
 
-    fun funcionSeparada(split: List<String>, x: Double): Double {
-        var funcion = split[2]
-        return 0.0
-    }
-/*    fun funcion(x: Double): Double {
+    /*    fun funcionSeparada(split: List<String>, x: Double): Double {
+            //3x+1x+2
+            var funcion = split[1]
+            var funcionRemplazada = funcion.replace("X", x.toString())
+
+            var x = funcionRemplazada.split("^")
+            Math.pow(x[0].substring(0, 1).toDouble(), 2.0)
+
+
+            return 0.0
+        }*/
+    private fun funcion(x: Double): Double {
         return (x * x * x) + 2 * (x * x) + (10 * x) - 20
-
     }
 
-    fun funcalcRaiz():Double {
-        var i = 1
-        while(e>0.001)
-        {
-            x[i+1]=x[i]-( (funcion(x[i])*(x[i-1]-x[i]))/(funcion(x[i-1])-funcion(x[i])) );
-
-            e= kotlin.math.abs((x[i + 1] - x[i]) / (x[i + 1])) *100;
-            i++
-        }
-        return x[i];
-    }*/
-
-    fun respuesta(): String {
+    private fun respuesta(): String {
         var i = 2
         var x0 = 0.0
         var x1 = 1.0
         var rta: Double
         var rtaAnterior = 0.0
         do {
-            rta = x1 - ((x1-x0)*funcionSeparada(funcion.text.split("="),x1))/(funcionSeparada(funcion.text.split("="),x1)-funcionSeparada(funcion.text.split("="),x0))
+            rta = x1 - ((x1 - x0) * funcion(x1)) / (funcion(x1) - funcion(x0))
             x0 = x1
             x1 = rta
             rtaAnterior = x0
             i++
-        } while(rta != rtaAnterior)
+        } while (rta != rtaAnterior)
 
-        return "i$rta"
+        return "En la iteracion $i la raiz es $rta"
     }
 
     @SuppressLint("SetTextI18n")
@@ -122,5 +128,6 @@ class MainActivity : AppCompatActivity() {
         variable = binding.etVaribale
         coeficiente = binding.etCoeficiente
         exponente = binding.etExponente
+        rta = binding.txtRta
     }
 }
