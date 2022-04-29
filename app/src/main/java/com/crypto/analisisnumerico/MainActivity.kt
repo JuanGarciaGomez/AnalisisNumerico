@@ -1,13 +1,10 @@
 package com.crypto.analisisnumerico
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.crypto.analisisnumerico.databinding.ActivityMainBinding
+import java.lang.StringBuilder
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,23 +13,146 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnAdd: Button
     private lateinit var btnSolve: Button
     private lateinit var funcion: TextView
-    private lateinit var variable: EditText
+    private lateinit var variable: RadioGroup
     private lateinit var coeficiente: EditText
     private lateinit var exponente: EditText
-    private var finalFunction = ""
-    private var firstAdd = true
+   private  var error:Boolean = false
+    private  var message:String = ""
+    private var variableFinal:String = ""
+    private var NO_VARIABLE:String = ""
+    private var VARIABLE:String = "X"
+    private var  builder: StringBuilder = StringBuilder()
 
+    private var function= {
+            radio:RadioGroup, _:Int ->
+        when (radio.checkedRadioButtonId){
+
+            R.id.radio_no -> variableFinal = NO_VARIABLE
+            R.id.radio_si -> variableFinal = VARIABLE
+        }
+ }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initBinding()
-        add()
+        checkbox()
+        addPart()
         solve()
+        /*add()
+        solve()*/
     }
 
     private fun solve() {
+
+        btnSolve.setOnClickListener {
+            if (funcion.text != null) {
+                val vectorSplit = funcion.text.split(" ")
+                println("f $vectorSplit")
+            }
+        }
+    }
+
+
+    private fun checkbox() {
+        variable.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener(function))
+    }
+
+    private fun addPart(){
+
+        btnAdd.setOnClickListener {
+            val rta:String = method()
+
+            if(error){
+                funcion.text = rta
+            }else{
+                Toast.makeText(this,rta,Toast.LENGTH_LONG).show()
+                error = false
+            }
+            funcion.text = rta
+
+        }
+
+    }
+
+    private var firstPass:Boolean = false
+    private fun method():String {
+
+        if( firstPass){
+            builder.append(" ")
+        }
+        if (coeficiente.text.toString()
+                .toInt() == 0 || (coeficiente.text.equals("") || coeficiente.text == null)
+        ) {
+            error = true
+            message = "no puede ser 0"
+            return message
+        }
+
+        if (firstPass && (coeficiente.text.substring(0, 1) != "+" && coeficiente.text.substring(
+                0,
+                1
+            ) != "-"
+                    )
+        ) {
+            builder.append("+")
+        }
+
+        if (coeficiente.text.substring(0, 1) == "+") {
+            if (!firstPass) {
+                builder.append(coeficiente.text.substring(1, coeficiente.length()))
+                firstPass = true
+            }
+            builder.append(coeficiente.text)
+        }else{
+            builder.append(coeficiente.text)
+        }
+
+        builder.append(variableFinal)
+
+        if (variableFinal == VARIABLE) {
+            if (exponente.text != null || !exponente.text.equals("")) {
+                builder.append("^")
+                builder.append(exponente.text)
+            }
+        }
+        firstPass = true
+        /*else{
+
+            if( coeficiente.text.toString().toInt() == 0){
+                error = true
+                message = "no puede ser 0"
+                return  message
+            }
+            builder.append(coeficiente.text)
+            builder.append(variableFinal)
+
+            if(variableFinal==EXPONENT){
+                if(exponente.text !=null || !exponente.text.equals("")){
+                    builder.append("^")
+                    builder.append(exponente.text)
+                    builder.append(" ")
+                }
+
+            }else{
+                builder.append(" ")
+            }
+
+        }*/
+        return builder.toString()
+
+    }
+
+    private fun initBinding() {
+        btnAdd = binding.btnAdd
+        btnSolve = binding.btnSolve
+        funcion = binding.txtFuncion
+        variable = binding.opcionVariable
+        coeficiente = binding.etCoeficiente
+        exponente = binding.etExponente
+    }
+   /* private fun solve() {
         btnSolve.setOnClickListener {
             //funcionSeparada(funcion.text.split("="))
         }
@@ -42,7 +162,7 @@ class MainActivity : AppCompatActivity() {
         var funcion = split[2]
         return 0.0
     }
-/*    fun funcion(x: Double): Double {
+   fun funcion(x: Double): Double {
         return (x * x * x) + 2 * (x * x) + (10 * x) - 20
 
     }
@@ -57,7 +177,7 @@ class MainActivity : AppCompatActivity() {
             i++
         }
         return x[i];
-    }*/
+    }
 
     fun respuesta(): String {
         var i = 2
@@ -109,18 +229,35 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            variable.setText("")
+
             coeficiente.setText("")
             exponente.setText("")
         }
     }
+*/
 
-    private fun initBinding() {
-        btnAdd = binding.btnAdd
-        btnSolve = binding.btnSolve
-        funcion = binding.txtFuncion
-        variable = binding.etVaribale
-        coeficiente = binding.etCoeficiente
-        exponente = binding.etExponente
-    }
+
+    /*
+ var funcion = "3X^1+5X^2"
+    var funcionRemplazada = funcion.replace("X", "1")
+    println(funcionRemplazada)
+    var x = funcionRemplazada.split("+")
+    println(x)
+    var y = x[1].split("^")
+    println(y)
+    var z = Math.pow(y[0].substring(1,2).toDouble(),y[1].toDouble())
+    println(z)
+ */
+
+    /*    fun funcionSeparada(split: List<String>, x: Double): Double {
+            //3x+1x+2
+            var funcion = split[1]
+            var funcionRemplazada = funcion.replace("X", x.toString())
+
+            var x = funcionRemplazada.split("^")
+            Math.pow(x[0].substring(0, 1).toDouble(), 2.0)
+
+
+            return 0.0
+        }*/
 }

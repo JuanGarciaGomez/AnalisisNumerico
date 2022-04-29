@@ -6,64 +6,104 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp"
+
         tools:context=".MainActivity">
 
-        <EditText
-            android:id="@+id/et_varibale"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:hint="Asigne la variable"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <EditText
-            android:id="@+id/et_exponente"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:hint="Asinge un exponente"
-            app:layout_constraintTop_toBottomOf="@id/et_varibale" />
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
 
-        <EditText
-            android:id="@+id/et_coeficiente"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_marginTop="8dp"
-            android:hint="Asigne el coeficiente"
-            app:layout_constraintTop_toBottomOf="@id/et_exponente"
-            tools:layout_editor_absoluteX="19dp" />
+                android:orientation="vertical"
+                app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/btn_add"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="Add"
-            app:layout_constraintTop_toBottomOf="@+id/et_coeficiente" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="METODO DE LA SECANTE"
+                    android:textAlignment="center"
+                    android:textSize="25dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/txt_funcion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:gravity="center"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/btn_add"
-            tools:text="F(x) = 3x^2 + 4x + 26 " />
+            <RadioGroup
+                android:id="@+id/opcion_variable"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
-        <Button
-            android:id="@+id/btn_solve"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="Solve"
-            app:layout_constraintTop_toBottomOf="@+id/txt_funcion"/>
+                <RadioButton
 
+                    android:id="@+id/radio_si"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:text="CON EXPONENTE" />
+
+                <RadioButton
+                    android:id="@+id/radio_no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SIN EXPONENTE" />
+            </RadioGroup>
+
+            <EditText
+                android:id="@+id/et_exponente"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Asinge un exponente"
+                app:layout_constraintTop_toBottomOf="@+id/opcion_variable"
+                tools:layout_editor_absoluteX="0dp" />
+
+            <EditText
+                android:id="@+id/et_coeficiente"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Asigne el coeficiente"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_exponente" />
+
+            <Button
+                android:id="@+id/btn_add"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Add"
+                app:layout_constraintTop_toBottomOf="@+id/et_coeficiente"
+                tools:layout_editor_absoluteX="10dp" />
+
+            <TextView
+                android:id="@+id/txt_funcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@+id/btn_add" />
+
+            <Button
+                android:id="@+id/btn_solve"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Solve"
+                app:layout_constraintTop_toBottomOf="@+id/txt_funcion" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
