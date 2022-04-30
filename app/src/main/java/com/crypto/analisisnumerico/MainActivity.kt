@@ -5,6 +5,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.crypto.analisisnumerico.databinding.ActivityMainBinding
 import java.lang.StringBuilder
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,13 +44,30 @@ class MainActivity : AppCompatActivity() {
         /*add()
         solve()*/
     }
-
+    var encontrado =false
+    private var contador:Int = 0
+    private var totalValueFunction:Int = 0
     private fun solve() {
+
 
         btnSolve.setOnClickListener {
             if (funcion.text != null) {
                 val vectorSplit = funcion.text.split(" ")
                 println("f $vectorSplit")
+
+                do {
+                    val x0=contador
+
+                    for(i in vectorSplit.indices ){
+                        var vectorActual = vectorSplit.get(i)
+                        var result = Math.pow(x0.toDouble(),vectorActual.substring(vectorActual.length-1,vectorActual.length).toDouble())
+                        result *= vectorActual.substringBefore(VARIABLE).toDouble()
+                        println("resultado$i : $result")
+                        totalValueFunction += result.toInt()
+                    }
+                    contador+= contador+1
+                }while(contador<=10);
+
             }
         }
     }
