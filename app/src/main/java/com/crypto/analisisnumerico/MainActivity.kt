@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.crypto.analisisnumerico.databinding.ActivityMainBinding
 import java.lang.StringBuilder
 import java.util.*
+import kotlin.math.abs
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,33 +45,70 @@ class MainActivity : AppCompatActivity() {
         /*add()
         solve()*/
     }
+
+
     var encontrado =false
-    private var contador:Int = 0
+    var isPrimary = true
     private var totalValueFunction:Int = 0
+    private var porcentaje:Int = 0
+    private var saveValue =0
     private fun solve() {
 
 
         btnSolve.setOnClickListener {
-            if (funcion.text != null) {
-                val vectorSplit = funcion.text.split(" ")
-                println("f $vectorSplit")
 
-                do {
-                    val x0=contador
+            methodTwo()
 
-                    for(i in vectorSplit.indices ){
-                        var vectorActual = vectorSplit.get(i)
-                        var result = Math.pow(x0.toDouble(),vectorActual.substring(vectorActual.length-1,vectorActual.length).toDouble())
-                        result *= vectorActual.substringBefore(VARIABLE).toDouble()
-                        println("resultado$i : $result")
-                        totalValueFunction += result.toInt()
-                    }
-                    contador+= contador+1
-                }while(contador<=10);
-
-            }
         }
     }
+
+    private fun methodTwo() {
+        if (funcion.text != null) {
+            val vectorSplit = funcion.text.split(" ")
+            println("f $vectorSplit")
+
+            var contador =0
+            var inicial = 0
+            var x0Value =0
+            var x1Value = 1
+            var rtaAfter =0
+
+            do {
+
+
+                inicial = when(contador){
+                    0 -> x0Value
+                    1 -> x1Value
+                    else -> totalValueFunction
+                }
+
+
+                for(i in vectorSplit.indices ){
+                    val vectorActual = vectorSplit.get(i)
+                    var result = Math.pow(inicial.toDouble(),vectorActual.substring(vectorActual.length-1,vectorActual.length).toDouble())
+                    result *= vectorActual.substringBefore(VARIABLE).toDouble()
+                    println("resultado$i : $result")
+                    totalValueFunction += result.toInt()
+
+                }
+
+                if(isPrimary){
+                    rtaAfter = totalValueFunction
+                    isPrimary = false
+                }else{
+
+                    val fuctionValue = x1Value - ((totalValueFunction *(x0Value-x1Value))/(rtaAfter-(totalValueFunction)))
+                    rtaAfter = totalValueFunction
+                    x0Value = x1Value
+                    x1Value = fuctionValue
+                }
+
+                contador++
+            }while(contador<=10 || encontrado)
+
+        }
+    }
+
 
 
     private fun checkbox() {
