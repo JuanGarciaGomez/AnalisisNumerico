@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.crypto.analisisnumerico.databinding.ActivityMainBinding
+import java.lang.Exception
 import java.lang.StringBuilder
 import java.util.*
 import kotlin.math.abs
@@ -14,25 +15,27 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var btnAdd: Button
     private lateinit var btnSolve: Button
+    private lateinit var btnClear: Button
     private lateinit var funcion: TextView
+    private lateinit var resultados: TextView
     private lateinit var variable: RadioGroup
     private lateinit var coeficiente: EditText
     private lateinit var exponente: EditText
-   private  var error:Boolean = false
-    private  var message:String = ""
-    private var variableFinal:String = ""
-    private var NO_VARIABLE:String = ""
-    private var VARIABLE:String = "X"
-    private var  builder: StringBuilder = StringBuilder()
+    private var error: Boolean = false
+    private var message: String = ""
+    private var variableFinal: String = ""
+    private var NO_VARIABLE: String = ""
+    private var VARIABLE: String = "X"
+    private var builder: StringBuilder = StringBuilder()
+    private var builderInfo:StringBuilder = StringBuilder()
 
-    private var function= {
-            radio:RadioGroup, _:Int ->
-        when (radio.checkedRadioButtonId){
+    private var function = { radio: RadioGroup, _: Int ->
+        when (radio.checkedRadioButtonId) {
 
             R.id.radio_no -> variableFinal = NO_VARIABLE
             R.id.radio_si -> variableFinal = VARIABLE
         }
- }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,88 +45,136 @@ class MainActivity : AppCompatActivity() {
         checkbox()
         addPart()
         solve()
-        /*add()
-        solve()*/
+        clearView()
+    }
+
+    private fun clearView() {
+        btnClear.setOnClickListener {
+            exponente.setText("")
+            coeficiente.setText("")
+            funcion.text = ""
+            encontrado = false
+            isPrimary = true
+            builder = StringBuilder()
+            firstPass = false
+            builderInfo = StringBuilder()
+            resultados.setText("")
+        }
     }
 
 
-    var encontrado =false
-    var isPrimary = true
-    private var totalValueFunction:Int = 0
-    private var porcentaje:Int = 0
-    private var saveValue =0
+    private var encontrado = false
+    private var isPrimary = true
+    private var totalValueFunction: Double = 0.0
+    private var porcentaje: Double = 0.0
     private fun solve() {
 
 
         btnSolve.setOnClickListener {
-
             methodTwo()
-
         }
     }
 
     private fun methodTwo() {
-        if (funcion.text != null) {
+        if (funcion.text != null || !funcion.text.toString().contains(VARIABLE)) {
             val vectorSplit = funcion.text.split(" ")
             println("f $vectorSplit")
 
-            var contador =0
-            var inicial = 0
-            var x0Value =0
-            var x1Value = 1
-            var rtaAfter =0
+            var contador = 0
+            var inicial = 0.0
+            var x0Value = 0.0
+            var x1Value = 1.0
+            var rtaAfter = 0.0
 
             do {
 
 
-                inicial = when(contador){
+                inicial = when (contador) {
                     0 -> x0Value
                     1 -> x1Value
                     else -> totalValueFunction
+
                 }
 
+                if (!isPrimary) {
+                    totalValueFunction = 0.0
+                }
 
-                for(i in vectorSplit.indices ){
+                for (i in vectorSplit.indices) {
                     val vectorActual = vectorSplit.get(i)
-                    var result = Math.pow(inicial.toDouble(),vectorActual.substring(vectorActual.length-1,vectorActual.length).toDouble())
+                    var result = Math.pow(
+                        inicial.toDouble(),
+                        vectorActual.substring(vectorActual.length - 1, vectorActual.length)
+                            .toDouble()
+                    )
                     result *= vectorActual.substringBefore(VARIABLE).toDouble()
                     println("resultado$i : $result")
-                    totalValueFunction += result.toInt()
+                    totalValueFunction += result
 
                 }
 
-                if(isPrimary){
+                if (isPrimary) {
                     rtaAfter = totalValueFunction
                     isPrimary = false
-                }else{
+                } else {
 
-                    val fuctionValue = x1Value - ((totalValueFunction *(x0Value-x1Value))/(rtaAfter-(totalValueFunction)))
+                    val fuctionValue =
+                        (x1Value - totalValueFunction * ((x0Value - x1Value) / (rtaAfter - (totalValueFunction))))
                     rtaAfter = totalValueFunction
                     x0Value = x1Value
                     x1Value = fuctionValue
+                    totalValueFunction = fuctionValue
+                    val rtaPorcentaje = calcularPorcentaje(fuctionValue, x0Value)
+
+                    builderInfo.append("Iteracion ${contador+1} valor : $totalValueFunction con porcentaje: $porcentaje").append("\n").append("\n")
+                    resultados.text =builderInfo.toString()
+                    if (rtaPorcentaje) {
+                        encontrado = true
+                        return
+                    }
+
+                    try {
+                        if(x0Value.toString().substring(0,4).equals(x1Value.toString().substring(0,4))){
+                            encontrado=true
+                            return
+                        }
+
+                    }catch (e:Exception){
+                        e.printStackTrace()
+                    }
+
                 }
 
                 contador++
-            }while(contador<=10 || encontrado)
+            } while (contador <= 10 || encontrado)
 
         }
     }
 
+    private fun calcularPorcentaje(fuctionValue: Double, x0Value: Double): Boolean {
+        porcentaje = 0.0
+        porcentaje = abs((fuctionValue - x0Value) / fuctionValue) * 100
+
+        if (porcentaje < 1.0) {
+            return true
+        }
+        return false
+    }
 
 
     private fun checkbox() {
         variable.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener(function))
     }
 
-    private fun addPart(){
+    private fun addPart() {
 
         btnAdd.setOnClickListener {
-            val rta:String = method()
+            val rta: String = method()
 
-            if(error){
+            if (error) {
                 funcion.text = rta
-            }else{
-                Toast.makeText(this,rta,Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this, rta, Toast.LENGTH_LONG).show()
                 error = false
             }
             funcion.text = rta
@@ -132,10 +183,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private var firstPass:Boolean = false
-    private fun method():String {
+    private var firstPass: Boolean = false
+    private fun method(): String {
 
-        if( firstPass){
+        if (firstPass) {
             builder.append(" ")
         }
         if (coeficiente.text.toString()
@@ -161,7 +212,7 @@ class MainActivity : AppCompatActivity() {
                 firstPass = true
             }
             builder.append(coeficiente.text)
-        }else{
+        } else {
             builder.append(coeficiente.text)
         }
 
@@ -174,33 +225,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
         firstPass = true
-        /*else{
-
-            if( coeficiente.text.toString().toInt() == 0){
-                error = true
-                message = "no puede ser 0"
-                return  message
-            }
-            builder.append(coeficiente.text)
-            builder.append(variableFinal)
-
-            if(variableFinal==EXPONENT){
-                if(exponente.text !=null || !exponente.text.equals("")){
-                    builder.append("^")
-                    builder.append(exponente.text)
-                    builder.append(" ")
-                }
-
-            }else{
-                builder.append(" ")
-            }
-
-        }*/
         return builder.toString()
 
     }
 
     private fun initBinding() {
+        resultados = binding.etInfo
+        btnClear = binding.btnClean
         btnAdd = binding.btnAdd
         btnSolve = binding.btnSolve
         funcion = binding.txtFuncion
@@ -208,112 +239,4 @@ class MainActivity : AppCompatActivity() {
         coeficiente = binding.etCoeficiente
         exponente = binding.etExponente
     }
-   /* private fun solve() {
-        btnSolve.setOnClickListener {
-            //funcionSeparada(funcion.text.split("="))
-        }
-    }
-
-    fun funcionSeparada(split: List<String>, x: Double): Double {
-        var funcion = split[2]
-        return 0.0
-    }
-   fun funcion(x: Double): Double {
-        return (x * x * x) + 2 * (x * x) + (10 * x) - 20
-
-    }
-
-    fun funcalcRaiz():Double {
-        var i = 1
-        while(e>0.001)
-        {
-            x[i+1]=x[i]-( (funcion(x[i])*(x[i-1]-x[i]))/(funcion(x[i-1])-funcion(x[i])) );
-
-            e= kotlin.math.abs((x[i + 1] - x[i]) / (x[i + 1])) *100;
-            i++
-        }
-        return x[i];
-    }
-
-    fun respuesta(): String {
-        var i = 2
-        var x0 = 0.0
-        var x1 = 1.0
-        var rta: Double
-        var rtaAnterior = 0.0
-        do {
-            rta = x1 - ((x1-x0)*funcionSeparada(funcion.text.split("="),x1))/(funcionSeparada(funcion.text.split("="),x1)-funcionSeparada(funcion.text.split("="),x0))
-            x0 = x1
-            x1 = rta
-            rtaAnterior = x0
-            i++
-        } while(rta != rtaAnterior)
-
-        return "i$rta"
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun addParts() {
-        val coeficienteConSigno =
-            if (coeficiente.text.substring(0, 1) != "-" && coeficiente.text.substring(
-                    0,
-                    1
-                ) != "+"
-            ) "+${coeficiente.text}"
-            else coeficiente.text.toString()
-
-        finalFunction += if (exponente.text.equals("1") || exponente.text.isEmpty())
-            "${coeficienteConSigno}${variable.text}"
-        else "${coeficienteConSigno}${variable.text}^${exponente.text}"
-
-        val finalVariable = finalFunction.substring(1, 2)
-        if (finalFunction.substring(0, 1) == "+") finalFunction =
-            finalFunction.replace(finalFunction.substring(0, 1), "")
-
-        funcion.text = "F(${finalVariable}) = $finalFunction"
-
-    }
-
-    private fun add() {
-        btnAdd.setOnClickListener {
-            if (firstAdd) {
-                if (variable.text.isNotEmpty()) addParts()
-                else Toast.makeText(this, "Asigne una variable inicial", Toast.LENGTH_SHORT).show()
-            } else {
-                if (coeficiente.text.isNotEmpty() || !coeficiente.text.equals("0")) {
-                    addParts()
-                }
-            }
-
-
-            coeficiente.setText("")
-            exponente.setText("")
-        }
-    }
-*/
-
-
-    /*
- var funcion = "3X^1+5X^2"
-    var funcionRemplazada = funcion.replace("X", "1")
-    println(funcionRemplazada)
-    var x = funcionRemplazada.split("+")
-    println(x)
-    var y = x[1].split("^")
-    println(y)
-    var z = Math.pow(y[0].substring(1,2).toDouble(),y[1].toDouble())
-    println(z)
- */
-
-    /*    fun funcionSeparada(split: List<String>, x: Double): Double {
-            //3x+1x+2
-            var funcion = split[1]
-            var funcionRemplazada = funcion.replace("X", x.toString())
-
-            var x = funcionRemplazada.split("^")
-            Math.pow(x[0].substring(0, 1).toDouble(), 2.0)
-
-
-            return 0.0
-        }*/
 }

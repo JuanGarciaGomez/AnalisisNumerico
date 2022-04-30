@@ -6,28 +6,24 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         tools:context=".MainActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:id="@+id/linearLayout2"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
 
                 android:orientation="vertical"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:text="METODO DE LA SECANTE"
                     android:textAlignment="center"
                     android:textSize="25dp"
@@ -37,7 +33,7 @@
             <RadioGroup
                 android:id="@+id/opcion_variable"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -103,6 +99,37 @@
                 android:layout_margin="10dp"
                 android:text="Solve"
                 app:layout_constraintTop_toBottomOf="@+id/txt_funcion" />
+
+            <Button
+                android:id="@+id/btn_clean"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_marginTop="12dp"
+                android:text="CLEAR VIEW"
+                app:layout_constraintTop_toBottomOf="@+id/btn_solve"
+                tools:layout_editor_absoluteX="31dp" />
+
+            <LinearLayout
+                android:id="@+id/infoFomula"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_clean">
+
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:ignore="UselessParent">
+
+                    <TextView
+                        android:id="@+id/et_info"
+                        android:textSize="22sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </ScrollView>
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
