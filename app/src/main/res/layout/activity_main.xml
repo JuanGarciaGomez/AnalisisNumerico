@@ -6,6 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="16dp"
         tools:context=".MainActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -60,6 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Asinge un exponente"
+                android:inputType="number"
                 app:layout_constraintTop_toBottomOf="@+id/opcion_variable"
                 tools:layout_editor_absoluteX="0dp" />
 
@@ -69,6 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:hint="Asigne el coeficiente"
+                android:inputType="number"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/et_exponente" />
@@ -125,9 +128,9 @@
 
                     <TextView
                         android:id="@+id/et_info"
-                        android:textSize="22sp"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        android:textSize="22sp" />
                 </ScrollView>
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>

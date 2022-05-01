@@ -1,12 +1,13 @@
 package com.crypto.analisisnumerico
 
 import android.os.Bundle
-import android.widget.*
+import android.view.View
+import android.widget.Button
+import android.widget.EditText
+import android.widget.RadioGroup
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.crypto.analisisnumerico.databinding.ActivityMainBinding
-import java.lang.Exception
-import java.lang.StringBuilder
-import java.util.*
 import kotlin.math.abs
 
 class MainActivity : AppCompatActivity() {
@@ -27,13 +28,18 @@ class MainActivity : AppCompatActivity() {
     private var NO_VARIABLE: String = ""
     private var VARIABLE: String = "X"
     private var builder: StringBuilder = StringBuilder()
-    private var builderInfo:StringBuilder = StringBuilder()
+    private var builderInfo: StringBuilder = StringBuilder()
 
     private var function = { radio: RadioGroup, _: Int ->
         when (radio.checkedRadioButtonId) {
-
-            R.id.radio_no -> variableFinal = NO_VARIABLE
-            R.id.radio_si -> variableFinal = VARIABLE
+            R.id.radio_no -> {
+                variableFinal = NO_VARIABLE
+                exponente.visibility = View.GONE
+            }
+            R.id.radio_si -> {
+                variableFinal = VARIABLE
+                exponente.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -58,7 +64,7 @@ class MainActivity : AppCompatActivity() {
             builder = StringBuilder()
             firstPass = false
             builderInfo = StringBuilder()
-            resultados.setText("")
+            resultados.text = ""
         }
     }
 
@@ -68,8 +74,7 @@ class MainActivity : AppCompatActivity() {
     private var totalValueFunction: Double = 0.0
     private var porcentaje: Double = 0.0
     private fun solve() {
-
-
+        //Falta validar si esta vacio
         btnSolve.setOnClickListener {
             methodTwo()
         }
@@ -126,25 +131,26 @@ class MainActivity : AppCompatActivity() {
                     totalValueFunction = fuctionValue
                     val rtaPorcentaje = calcularPorcentaje(fuctionValue, x0Value)
 
-                    builderInfo.append("Iteracion ${contador+1} valor : $totalValueFunction con porcentaje: $porcentaje").append("\n").append("\n")
-                    resultados.text =builderInfo.toString()
+                    builderInfo.append("Iteracion ${contador + 1} valor : $totalValueFunction con porcentaje: $porcentaje")
+                        .append("\n").append("\n")
+                    resultados.text = builderInfo.toString()
                     if (rtaPorcentaje) {
                         encontrado = true
                         return
                     }
 
                     try {
-                        if(x0Value.toString().substring(0,4).equals(x1Value.toString().substring(0,4))){
-                            encontrado=true
+                        if (x0Value.toString().substring(0, 4) == x1Value.toString()
+                                .substring(0, 4)
+                        ) {
+                            encontrado = true
                             return
                         }
 
-                    }catch (e:Exception){
+                    } catch (e: Exception) {
                         e.printStackTrace()
                     }
-
                 }
-
                 contador++
             } while (contador <= 10 || encontrado)
 
@@ -167,18 +173,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun addPart() {
-
+        //Validar si esta vacio
         btnAdd.setOnClickListener {
             val rta: String = method()
 
             if (error) {
                 funcion.text = rta
             } else {
-                Toast.makeText(this, rta, Toast.LENGTH_LONG).show()
                 error = false
             }
             funcion.text = rta
-
         }
 
     }
@@ -218,15 +222,12 @@ class MainActivity : AppCompatActivity() {
 
         builder.append(variableFinal)
 
-        if (variableFinal == VARIABLE) {
-            if (exponente.text != null || !exponente.text.equals("")) {
-                builder.append("^")
-                builder.append(exponente.text)
-            }
+        if (variableFinal == VARIABLE && (exponente.text != null || !exponente.text.equals(""))) {
+            builder.append("^")
+            builder.append(exponente.text)
         }
         firstPass = true
         return builder.toString()
-
     }
 
     private fun initBinding() {
