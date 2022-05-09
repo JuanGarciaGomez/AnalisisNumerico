@@ -11,7 +11,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
@@ -112,27 +112,26 @@
                 android:text="CLEAR VIEW"
                 app:layout_constraintTop_toBottomOf="@+id/btn_solve"
                 tools:layout_editor_absoluteX="31dp" />
-
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/btn_clean"
+                tools:ignore="UselessParent">
             <LinearLayout
                 android:id="@+id/infoFomula"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btn_clean">
-
-
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    tools:ignore="UselessParent">
 
                     <TextView
                         android:id="@+id/et_info"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:textSize="22sp" />
-                </ScrollView>
+
             </LinearLayout>
+            </ScrollView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

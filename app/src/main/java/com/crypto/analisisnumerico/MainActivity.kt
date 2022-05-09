@@ -62,6 +62,7 @@ class MainActivity : AppCompatActivity() {
             firstPass = false
             builderInfo = StringBuilder()
             resultados.text = ""
+            totalValueFunction = 0.0
         }
     }
 
@@ -90,7 +91,7 @@ class MainActivity : AppCompatActivity() {
 
             do {
 
-
+                var result =1.0
                 inicial = when (contador) {
                     0 -> x0Value
                     1 -> x1Value
@@ -104,11 +105,15 @@ class MainActivity : AppCompatActivity() {
 
                 for (i in vectorSplit.indices) {
                     val vectorActual = vectorSplit.get(i)
-                    var result = Math.pow(
-                        inicial.toDouble(),
-                        vectorActual.substring(vectorActual.length - 1, vectorActual.length)
-                            .toDouble()
-                    )
+                    if(vectorActual.contains(VARIABLE)) {
+                         result = Math.pow(
+                            inicial.toDouble(),
+                            vectorActual.substring(vectorActual.length - 1, vectorActual.length)
+                                .toDouble()
+                        )
+                    }else{
+                        result = 1.0
+                    }
                     result *= vectorActual.substringBefore(VARIABLE).toDouble()
                     println("resultado$i : $result")
                     totalValueFunction += result
@@ -149,7 +154,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 contador++
-            } while (contador <= 10 || encontrado)
+            } while (contador <= 13 || encontrado)
 
         }else{
            Toast.makeText(this,"FUNCION VACIA O SIN VARIBALE",Toast.LENGTH_LONG).show()
@@ -158,7 +163,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun calcularPorcentaje(fuctionValue: Double, x0Value: Double): Boolean {
         porcentaje = 0.0
-        porcentaje = abs((fuctionValue - x0Value) / fuctionValue) * 100
+        porcentaje = abs((fuctionValue - (x0Value)) / fuctionValue) * 100
 
         if (porcentaje < 1.0) {
             return true
