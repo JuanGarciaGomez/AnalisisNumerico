@@ -2,10 +2,7 @@ package com.crypto.analisisnumerico
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.RadioGroup
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.crypto.analisisnumerico.databinding.ActivityMainBinding
 import kotlin.math.abs
@@ -81,7 +78,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun methodTwo() {
-        if (funcion.text != null || !funcion.text.toString().contains(VARIABLE)) {
+        if (!funcion.text.toString().isEmpty() && funcion.text.toString().contains(VARIABLE)) {
             val vectorSplit = funcion.text.split(" ")
             println("f $vectorSplit")
 
@@ -154,6 +151,8 @@ class MainActivity : AppCompatActivity() {
                 contador++
             } while (contador <= 10 || encontrado)
 
+        }else{
+           Toast.makeText(this,"FUNCION VACIA O SIN VARIBALE",Toast.LENGTH_LONG).show()
         }
     }
 
@@ -176,19 +175,55 @@ class MainActivity : AppCompatActivity() {
         //Validar si esta vacio
         btnAdd.setOnClickListener {
             val rta: String = method()
-
             if (error) {
-                funcion.text = rta
-            } else {
                 error = false
+                Toast.makeText(this, rta,Toast.LENGTH_LONG).show()
+            } else {
+                funcion.text = rta
+                coeficiente.text = null
+                exponente.text = null
             }
-            funcion.text = rta
         }
 
     }
 
+   private  fun messageCoeficienteExponenteEmpty() :String{
+       if (coeficiente.text.toString() == "" || exponente.text.toString() == "") {
+           message = "El coeficiente y el exponente se encuentran vacio"
+       }else{
+           message = "Debe marcar una opcion del combo box"
+
+       }
+
+       error =true
+        return message
+    }
+
     private var firstPass: Boolean = false
     private fun method(): String {
+
+        when(variable.checkedRadioButtonId) {
+            R.id.radio_no -> {
+                if (variableFinal == NO_VARIABLE && coeficiente.text.toString() == "") {
+                    error = true
+                    message = "El coeficiente se encuentra vacio"
+                    return  message
+                }
+            }
+
+            R.id.radio_si -> {
+                if (coeficiente.text.toString() == "" || exponente.text.toString() == "") {
+                    error = true
+                    message = "El coeficiente y el exponente se encuentran vacio"
+                    return message
+                }
+            }
+
+            else -> {
+                return messageCoeficienteExponenteEmpty()
+            }
+
+        }
 
         if (firstPass) {
             builder.append(" ")

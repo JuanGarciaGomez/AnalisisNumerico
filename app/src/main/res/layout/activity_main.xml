@@ -61,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Asinge un exponente"
-                android:inputType="number"
+
                 app:layout_constraintTop_toBottomOf="@+id/opcion_variable"
                 tools:layout_editor_absoluteX="0dp" />
 
@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:hint="Asigne el coeficiente"
-                android:inputType="number"
+
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/et_exponente" />
