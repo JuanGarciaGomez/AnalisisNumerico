@@ -142,8 +142,8 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     try {
-                        if (x0Value.toString().substring(0, 4) == x1Value.toString()
-                                .substring(0, 4)
+                        if (x0Value.toString().substring(0, 5) == x1Value.toString()
+                                .substring(0, 5)
                         ) {
                             encontrado = true
                             return
